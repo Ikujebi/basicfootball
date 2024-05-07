@@ -1,0 +1,42 @@
+.image{
+    display: flex;
+    align-items: center;
+    justify-items: center;
+    margin: auto;
+   flex-direction: column;
+}
+
+.teams{
+    display: flex;
+    gap: 4rem;
+}
+
+@media only screen and (max-width: 767px) {
+    .teams, h1  {
+        display: block;
+        gap: 2px; 
+        font-size: 11px;
+    }
+}
+
+.btn{
+    padding: 5px;
+    border-radius: 10px;
+    border: none;
+    font-size: large;
+    
+}
+
+.serif{
+    font-family: sans-serif;
+}
+
+
+input{
+    border: none;
+    background-color: rgb(221, 221, 221);
+    box-shadow: 50;
+    outline: none;
+    height: 1.5rem;
+    
+}
