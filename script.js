@@ -16,31 +16,32 @@ function addPlayer() {
 }
 
 function randomizePlayers() {
-    var allPlayers = [];
-    var teamLists = document.querySelectorAll("ul");
+    const teamLists = document.querySelectorAll("ul");
+    const allPlayers = [];
+
+    // Collect all players into one array
     teamLists.forEach(function(teamList) {
         Array.from(teamList.children).forEach(function(player) {
             allPlayers.push(player.textContent);
         });
-        teamList.innerHTML = ""; // Clear the team list
     });
 
     // Shuffle the players array
     allPlayers.sort(function() { return 0.5 - Math.random() });
 
     // Distribute players to teams
-    var numTeams = teamLists.length;
-    var playersPerTeam = Math.ceil(allPlayers.length / numTeams);
-    for (var i = 0; i < allPlayers.length; i += playersPerTeam) {
-        for (var j = 0; j < numTeams; j++) {
-            var playerName = allPlayers[i + j];
-            if (playerName) {
-                var teamId = "team" + (j + 1);
-                var teamList = document.getElementById(teamId).querySelector("ul");
-                var listItem = document.createElement("li");
-                listItem.textContent = playerName;
-                teamList.appendChild(listItem);
-            }
+    const numTeams = teamLists.length;
+    const playersPerTeam = Math.ceil(allPlayers.length / numTeams);
+    let playerIndex = 0;
+    teamLists.forEach(function(teamList) {
+        // Clear the team list
+        teamList.innerHTML = "";
+
+        // Add players to the team list
+        for (let i = 0; i < playersPerTeam && playerIndex < allPlayers.length; i++) {
+            const listItem = document.createElement("li");
+            listItem.textContent = allPlayers[playerIndex++];
+            teamList.appendChild(listItem);
         }
-    }
+    });
 }
