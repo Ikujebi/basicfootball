@@ -1,9 +1,9 @@
 function addPlayer() {
     let playerName = document.getElementById("playerName").value;
-    console.log("ydygcdygcduuuuugduuduu");
+    
     if (playerName) {
         
-        let teamNumber = Math.floor(Math.random() * 4) + 1; // Random number between 1 and 4
+        let teamNumber = Math.floor(Math.random() * 4) + 1; 
         let teamId = "team" + teamNumber;
         let teamList = document.getElementById(teamId).querySelector("ul");
         let listItem = document.createElement("li");
@@ -19,7 +19,6 @@ function randomizePlayers() {
     const teamLists = document.querySelectorAll("ul");
     const allPlayers = [];
 
-    // Collect all players into one array
     teamLists.forEach(function(teamList) {
         Array.from(teamList.children).forEach(function(player) {
             allPlayers.push(player.textContent);
@@ -31,7 +30,7 @@ function randomizePlayers() {
 
     // Distribute players to teams
     const numTeams = teamLists.length;
-    const playersPerTeam = Math.ceil(allPlayers.length / numTeams);
+    const playersPerTeam = Math.floor(allPlayers.length / numTeams);
     let playerIndex = 0;
     teamLists.forEach(function(teamList) {
         // Clear the team list
@@ -45,3 +44,14 @@ function randomizePlayers() {
         }
     });
 }
+
+
+document.getElementById("playerName").addEventListener("keypress", function(event) {
+    // Check if the pressed key is Enter (key code 13)
+    if (event.key === "Enter") {
+        // Prevent the default action (form submission)
+        event.preventDefault();
+        // Call the addPlayer function
+        addPlayer();
+    }
+});
