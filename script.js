@@ -55,3 +55,5 @@ document.getElementById("playerName").addEventListener("keypress", function(even
         addPlayer();
     }
 });
+
+
