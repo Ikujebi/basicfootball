@@ -3,6 +3,7 @@ if (calculateBtn) {
     calculateBtn.addEventListener('click', function () {
         console.log("Button  found!");
         calculateGDAndPoints();
+        arrangeTeamsByPoints();
     });
 } else {
     console.error("Button not found!");
@@ -25,5 +26,21 @@ function calculateGDAndPoints() {
 
         const points = (won * 3) + (drawn * 1);
         row.querySelector('.points').value = points;
+    });
+}
+
+
+function arrangeTeamsByPoints() {
+    const tbody = document.querySelector('.table_container tbody');
+    const rowsArray = Array.from(tbody.querySelectorAll('tr'));
+
+    rowsArray.sort((a, b) => {
+        const pointsA = parseInt(a.querySelector('.points').value);
+        const pointsB = parseInt(b.querySelector('.points').value);
+        return pointsB - pointsA;
+    });
+
+    rowsArray.forEach(row => {
+        tbody.appendChild(row);
     });
 }
