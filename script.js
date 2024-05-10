@@ -2,16 +2,33 @@ function addPlayer() {
     let playerName = document.getElementById("playerName").value;
     
     if (playerName) {
-        
-        let teamNumber = Math.floor(Math.random() * 4) + 1; 
+        // Randomly assign player to a team
+        let teamNumber = Math.floor(Math.random() * numTeams) + 1; 
         let teamId = "team" + teamNumber;
         let teamList = document.getElementById(teamId).querySelector("ul");
         let listItem = document.createElement("li");
         listItem.textContent = playerName;
         teamList.appendChild(listItem);
 
-       
-        document.getElementById("playerName").value = ""
+        document.getElementById("playerName").value = "";
+    }
+}
+
+function setupTeams() {
+    let numTeams = parseInt(document.getElementById("numTeams").value);
+    if (numTeams < 1) {
+        alert("Please enter a valid number of teams.");
+        return;
+    }
+
+    let teamsDiv = document.getElementById("teams");
+    teamsDiv.innerHTML = "";
+
+    for (let i = 1; i <= numTeams; i++) {
+        let teamDiv = document.createElement("div");
+        teamDiv.id = "team" + i;
+        teamDiv.innerHTML = "<h1>TEAM " + i + "</h1><ul></ul>";
+        teamsDiv.appendChild(teamDiv);
     }
 }
 

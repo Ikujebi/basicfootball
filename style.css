@@ -112,4 +112,15 @@ table tr:hover {
     text-decoration: none;
     font-size: 2rem;
     font-weight: 700;
+    color: blue;
+    margin-bottom: 2rem;
+}
+
+.mt{
+    margin-top: 5rem;
+    
+}
+
+.mb{
+    margin-bottom: 3rem;
 }

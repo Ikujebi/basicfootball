@@ -8,44 +8,28 @@
     <link rel="icon" type="image/svg+xml" href="/image/awarri.png" />
     <link rel="stylesheet" href="style.css">
 </head>
-<body><div class="image serif">
+<body>
+<div class="image serif">
     <div class="image">
-    <img src="/image/awarri image.png" alt="">
-    <a href="/league.html" class="decor">League</a>
-</div>
+        <img src="/image/awarri image.png" alt="">
+        <div class="decor">League Set Up</div>
+    </div>
     <h1>Team Assignment</h1>
-<div>
-    <input id="playerName" type="text" class="input">
-    <button class="btn" onclick="addPlayer()">Add Player</button>
-
-</div>
-<div class="teams">
-    <div id="team1">
-       <h1>TEAM 1</h1> 
-       <ul>
-        
-       </ul>
+    <div>
+        <div>
+        <input id="playerName" type="text" class="input" placeholder="Enter player names">
+        <button class="btn" onclick="addPlayer()">Add Player</button>
+    </div><br>
+    <div class="mb">
+        <input class="input" id="numTeams" type="number" placeholder="Enter number of teams">
+        <button class="btn" onclick="setupTeams()">Set up Teams</button>
     </div>
-    <div id="team2">
-       <h1>TEAM 2</h1> 
-       <ul>
-        
-       </ul>
     </div>
-    <div id="team3">
-       <h1>TEAM 3</h1> 
-       <ul>
-        
-       </ul>
+    <div id="teams" class="teams">
     </div>
-    <div id="team4">
-       <h1>TEAM 4</h1> 
-       <ul>
-        
-       </ul>
-    </div>
-</div>
     <button class="btn" onclick="randomizePlayers()">Randomize Players Again</button>
 </div>
+
+<footer class="image"><a href="/league.html" class="decor mt">League Table</a></footer>
 </body>
 </html>
