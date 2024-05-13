@@ -1,18 +1,4 @@
-function addPlayer() {
-    let playerName = document.getElementById("playerName").value;
-    
-    if (playerName) {
-        // Randomly assign player to a team
-        let teamNumber = Math.floor(Math.random() * numTeams) + 1; 
-        let teamId = "team" + teamNumber;
-        let teamList = document.getElementById(teamId).querySelector("ul");
-        let listItem = document.createElement("li");
-        listItem.textContent = playerName;
-        teamList.appendChild(listItem);
 
-        document.getElementById("playerName").value = "";
-    }
-}
 
 function setupTeams() {
     let numTeams = parseInt(document.getElementById("numTeams").value);
@@ -31,6 +17,35 @@ function setupTeams() {
         teamsDiv.appendChild(teamDiv);
     }
 }
+
+function addPlayer() {
+    let playerName = document.getElementById("playerName").value;
+    
+    if (playerName) {
+        // Get the number of teams that have been created
+        let numTeams = document.querySelectorAll("#teams > div").length;
+        
+        // Randomly select a team number within the range of created teams
+        let teamNumber = Math.floor(Math.random() * numTeams) + 1;
+        
+        // Construct the ID of the selected team
+        let teamId = "team" + teamNumber;
+        
+        // Find the team's <ul> element within the team's <div>
+        let teamList = document.getElementById(teamId).querySelector("ul");
+        
+        // Create a new <li> element for the player
+        let listItem = document.createElement("li");
+        listItem.textContent = playerName;
+        
+        // Append the player to the team's list
+        teamList.appendChild(listItem);
+
+        // Clear the input field after adding the player
+        document.getElementById("playerName").value = "";
+    }
+}
+
 
 function randomizePlayers() {
     const teamLists = document.querySelectorAll("ul");
@@ -68,8 +83,10 @@ document.getElementById("playerName").addEventListener("keypress", function(even
     if (event.key === "Enter") {
         // Prevent the default action (form submission)
         event.preventDefault();
-        // Call the addPlayer function
-        addPlayer();
+        // Get the number of teams
+        let numTeams = document.querySelectorAll("#teams > div").length;
+        // Call the addPlayer function with numTeams as a parameter
+        addPlayer(numTeams);
     }
 });
 
