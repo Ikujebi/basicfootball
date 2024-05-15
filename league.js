@@ -54,7 +54,7 @@ document.addEventListener("DOMContentLoaded", function() {
     function arrangeTeamsByPoints() {
         const tbody = document.querySelector('.table_container tbody');
         const rowsArray = Array.from(tbody.querySelectorAll('tr'));
-
+        console.log(rowsArray); 
         rowsArray.sort((a, b) => {
             const pointsA = parseInt(a.querySelector('.points').value);
             const pointsB = parseInt(b.querySelector('.points').value);
