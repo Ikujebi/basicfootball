@@ -3,36 +3,333 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Team Assignment</title>
-    <script src="script.js" defer></script>
-    <link rel="icon" type="image/svg+xml" href="/image/awarri.png" />
+
+    <meta
+        name="description"
+        content="Awarri Football League team assignment and player management."
+    >
+    <meta name="theme-color" content="#5f021f">
+
+    <title>Team Assignment | Awarri Football League</title>
+
+    <link rel="icon" type="image/svg+xml" href="/image/awarri.png">
     <link rel="stylesheet" href="style.css">
+    <script src="script.js" defer></script>
 </head>
+
 <body>
-<div class="image serif">
-    <div class="image">
-        <img src="/image/awarri image.png" alt="">
-        <div class="decor">League Set Up</div>
-    </div>
-    <h1>Team Assignment</h1>
-    <div>
+    <div class="app-shell">
 
-        <div class="mb">
-            <input class="input" id="numTeams" type="number" placeholder="Enter number of teams">
-            <button class="btn" onclick="setupTeams()">Set up Teams</button>
-        </div>
-        <div>
-        <input id="playerName" type="text" class="input" placeholder="Enter player names">
-        <button class="btn" onclick="addPlayer()">Add Player</button>
-    </div><br>
-   
-    </div>
-    <div id="teams" class="teams">
-        
-    </div>
-    <button class="btn" onclick="randomizePlayers()">Randomize Players Again</button>
-</div>
+        <!-- HEADER -->
+        <header class="topbar">
+            <a href="/" class="brand" aria-label="Awarri home">
+                <img src="/image/awarri image.png" alt="Awarri logo">
 
-<footer class="image"><a href="/league.html" class="decor mt">League Table</a></footer>
+                <span class="brand-divider"></span>
+
+                <span class="brand-label">LEAGUE MANAGEMENT</span>
+            </a>
+
+            <a href="/league.html" class="nav-link">
+                <span>League Table</span>
+                <span aria-hidden="true">→</span>
+            </a>
+        </header>
+
+        <main>
+
+            <!-- HERO -->
+            <section class="hero">
+                <div class="hero-copy">
+                    <p class="eyebrow">AWARRI FOOTBALL LEAGUE</p>
+
+                    <h1>Team Assignment</h1>
+
+                    <p class="hero-description">
+                        Organise your players, create balanced teams, and
+                        manage team assignments with ease.
+                    </p>
+                </div>
+
+                <div class="hero-mark" aria-hidden="true">
+                    ⚽
+                </div>
+            </section>
+
+            <!-- DASHBOARD OVERVIEW -->
+            <section
+                class="overview-grid"
+                aria-label="Team assignment overview"
+            >
+
+                <article class="overview-card">
+                    <div class="overview-icon">👥</div>
+
+                    <div>
+                        <p class="overview-label">Total Players</p>
+                        <p class="overview-value" id="total-players">0</p>
+                    </div>
+                </article>
+
+                <article class="overview-card">
+                    <div class="overview-icon">🏆</div>
+
+                    <div>
+                        <p class="overview-label">Total Teams</p>
+                        <p class="overview-value" id="total-teams">0</p>
+                    </div>
+                </article>
+
+                <article class="overview-card">
+                    <div class="overview-icon">📊</div>
+
+                    <div>
+                        <p class="overview-label">Average Players</p>
+                        <p class="overview-value" id="average-players">0</p>
+                    </div>
+                </article>
+
+            </section>
+
+            <!-- CONFIGURATION AND PLAYER MANAGEMENT -->
+            <section class="workspace">
+
+                <!-- TEAM CONFIGURATION -->
+                <div class="panel setup-panel">
+
+                    <div class="section-heading">
+                        <div>
+                            <p class="section-kicker">GET STARTED</p>
+                            <h2>Team configuration</h2>
+                        </div>
+
+                        <span class="step-number">01</span>
+                    </div>
+
+                    <form id="setup-form" class="setup-form">
+
+                        <div class="field">
+                            <label for="numTeams">Number of teams</label>
+
+                            <input
+                                class="input"
+                                id="numTeams"
+                                name="numTeams"
+                                type="number"
+                                min="1"
+                                max="30"
+                                step="1"
+                                placeholder="e.g. 4"
+                                required
+                            >
+
+                            <small>Choose between 1 and 30 teams.</small>
+                        </div>
+
+                        <button class="btn btn-primary" type="submit">
+                            Create Teams
+                        </button>
+
+                    </form>
+
+                </div>
+
+                <!-- PLAYER MANAGEMENT -->
+                <div class="panel player-panel">
+
+                    <div class="section-heading">
+                        <div>
+                            <p class="section-kicker">BUILD YOUR ROSTER</p>
+                            <h2>Add players</h2>
+                        </div>
+
+                        <span class="step-number">02</span>
+                    </div>
+
+                    <!-- ASSIGNMENT MODE -->
+                    <div class="field assignment-field">
+
+                        <label for="assignmentTeam">
+                            Assign players to
+                        </label>
+
+                        <select
+                            id="assignmentTeam"
+                            class="input"
+                        >
+                            <option value="auto">
+                                Automatically balance teams
+                            </option>
+                        </select>
+
+                        <small>
+                            Choose a specific team for manual assignment,
+                            or use automatic balancing.
+                        </small>
+
+                    </div>
+
+                    <!-- SINGLE PLAYER -->
+                    <form
+                        id="single-player-form"
+                        class="single-player-form"
+                    >
+
+                        <div class="field">
+                            <label for="playerName">Player's name</label>
+
+                            <input
+                                id="playerName"
+                                name="playerName"
+                                class="input"
+                                type="text"
+                                maxlength="80"
+                                placeholder="Enter player's full name"
+                                autocomplete="off"
+                            >
+                        </div>
+
+                        <button class="btn btn-primary" type="submit">
+                            <span aria-hidden="true">+</span>
+                            Add Player
+                        </button>
+
+                    </form>
+
+                    <!-- BULK PLAYER ENTRY -->
+                    <div class="bulk-entry">
+
+                        <label for="playerList">
+                            Add multiple players
+                        </label>
+
+                        <p class="field-help">
+                            Paste names below. Separate each player with
+                            a new line, comma, or semicolon.
+                        </p>
+
+                        <textarea
+                            id="playerList"
+                            class="input player-textarea"
+                            placeholder="John Doe&#10;James Smith&#10;Michael Brown"
+                            rows="5"
+                            maxlength="20000"
+                        ></textarea>
+
+                        <button
+                            class="btn btn-secondary"
+                            id="bulk-add-btn"
+                            type="button"
+                        >
+                            Add All Players
+                        </button>
+
+                    </div>
+
+                </div>
+
+            </section>
+
+            <!-- STATUS MESSAGE -->
+            <div
+                id="league-status"
+                class="status-message"
+                role="status"
+                aria-live="polite"
+                hidden
+            ></div>
+
+            <!-- ASSIGNED TEAMS -->
+            <section class="teams-section">
+
+                <div class="teams-heading">
+
+                    <div>
+                        <p class="section-kicker">YOUR LINE-UP</p>
+
+                        <h2>Assigned Teams</h2>
+
+                        <p class="section-subtitle">
+                            View and manage your player assignments below.
+                        </p>
+                    </div>
+
+                    <span class="roster-badge" id="roster-summary">
+                        No teams created
+                    </span>
+
+                </div>
+
+                <div id="teams" class="teams">
+
+                    <div class="empty-state">
+                        <div class="empty-icon">⚽</div>
+
+                        <h3>Your teams will appear here</h3>
+
+                        <p>
+                            Choose the number of teams, then start adding
+                            players to your roster.
+                        </p>
+                    </div>
+
+                </div>
+
+            </section>
+
+            <!-- TEAM ACTIONS -->
+            <section class="action-panel">
+
+                <div>
+                    <h2>Ready to shuffle?</h2>
+
+                    <p>
+                        Randomly redistribute all players while keeping
+                        team sizes as balanced as possible.
+                    </p>
+                </div>
+
+                <div class="team-actions">
+
+                    <button
+                        class="btn btn-secondary"
+                        id="randomize-btn"
+                        type="button"
+                        disabled
+                    >
+                        <span aria-hidden="true">🔀</span>
+                        Randomize Teams
+                    </button>
+
+                    <button
+                        class="btn btn-primary"
+                        id="copy-btn"
+                        type="button"
+                        disabled
+                    >
+                        <span aria-hidden="true">📋</span>
+                        Copy Team List
+                    </button>
+
+                </div>
+
+            </section>
+
+        </main>
+
+        <!-- FOOTER -->
+        <footer class="footer">
+
+            <p>
+                © <span id="current-year"></span> Awarri Football League
+            </p>
+
+            <a href="/league.html">
+                View League Table →
+            </a>
+
+        </footer>
+
+    </div>
 </body>
 </html>

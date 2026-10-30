@@ -1,45 +1,323 @@
+
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+
+    <meta name="theme-color" content="#172554">
+    <meta name="description" content="Football League Management Dashboard">
+
+    <title>Football League | Awarri</title>
+
+    <link rel="icon" type="image/svg+xml" href="/image/awarri.png">
+    <link rel="stylesheet" href="league.css">
+
     <script src="league.js" defer></script>
-    <link rel="icon" type="image/svg+xml" href="/image/awarri.png" />
-    <link rel="stylesheet" href="style.css">
 </head>
+
 <body>
-    <div id="container" class="image serif">
-        <header class="image">
-            <img src="/image/awarri image.png" alt="">
-            <a href="/" class="decor">HOME</a>
-        </header>
-        <main class="main_body">
-            <div class="table_container">
-                <h1>Football League Table</h1>
-                <table id="league-table">
-                    <thead>
-                        <tr>
-                            <th>Team</th>
-                            <th>Played</th>
-                            <th>Won</th>
-                            <th>Drawn</th>
-                            <th>Lost</th>
-                            <th>GF</th>
-                            <th>GA</th>
-                            <th>GD</th>
-                            <th>Points</th>
-                        </tr>
-                    </thead>
-                    <tbody id="league-teams">
-                        <!-- Table rows will be added here dynamically -->
-                    </tbody>
-                </table>
-                <div class="table_btn">
-                    <button id="calculate-btn" class="btn">Calculate</button>
+
+    <div class="league-app">
+
+        <!-- HEADER -->
+        <header class="dashboard-header">
+
+            <div class="brand">
+                <img src="/image/awarri image.png" alt="Awarri Logo">
+
+                <div>
+                    <span class="brand-name">AWARRI</span>
+                    <span class="brand-subtitle">LEAGUE MANAGEMENT</span>
                 </div>
             </div>
+
+            <a href="/" class="home-link">
+                <span>←</span> Home
+            </a>
+
+        </header>
+
+        <main class="dashboard-main">
+
+            <!-- PAGE INTRODUCTION -->
+            <section class="page-intro">
+
+                <div>
+                    <span class="eyebrow">COMPETITION MANAGEMENT</span>
+
+                    <h1>Football League</h1>
+
+                    <p>
+                        Manage your teams, track match statistics
+                        and monitor league standings.
+                    </p>
+                </div>
+
+                <div class="live-indicator">
+                    <span class="live-dot"></span>
+                    League Dashboard
+                </div>
+
+            </section>
+
+
+            <!-- SUMMARY CARDS -->
+            <section class="summary-grid">
+
+                <article class="summary-card">
+
+                    <div class="summary-icon teams-icon">♟</div>
+
+                    <div>
+                        <span class="summary-label">Total Teams</span>
+                        <h2 id="total-teams">0</h2>
+                    </div>
+
+                </article>
+
+
+                <article class="summary-card">
+
+                    <div class="summary-icon matches-icon">⚽</div>
+
+                    <div>
+                        <span class="summary-label">Matches Recorded</span>
+                        <h2 id="total-matches">0</h2>
+                    </div>
+
+                </article>
+
+
+                <article class="summary-card">
+
+                    <div class="summary-icon goals-icon">◎</div>
+
+                    <div>
+                        <span class="summary-label">Total Goals</span>
+                        <h2 id="total-goals">0</h2>
+                    </div>
+
+                </article>
+
+
+                <article class="summary-card">
+
+                    <div class="summary-icon leader-icon">🏆</div>
+
+                    <div>
+                        <span class="summary-label">League Leader</span>
+                        <h2 id="league-leader">—</h2>
+                    </div>
+
+                </article>
+
+            </section>
+
+
+            <!-- LEAGUE CONFIGURATION -->
+            <section class="panel configuration-panel">
+
+                <div class="panel-heading">
+
+                    <div>
+                        <h2>League Configuration</h2>
+
+                        <p>
+                            Configure the number of participating teams.
+                        </p>
+                    </div>
+
+                    <span class="section-number">01</span>
+
+                </div>
+
+                <form id="setup-form" class="setup-form">
+
+                    <div class="form-group">
+
+                        <label for="numTeams">Number of Teams</label>
+
+                        <input
+                            type="number"
+                            id="numTeams"
+                            min="2"
+                            max="30"
+                            value="4"
+                            required
+                        >
+
+                        <small>Minimum 2 teams, maximum 30 teams.</small>
+
+                    </div>
+
+                    <button type="submit" class="btn btn-primary">
+                        Generate League
+                    </button>
+
+                </form>
+
+            </section>
+
+
+            <!-- STANDINGS -->
+            <section class="panel standings-panel">
+
+                <div class="panel-heading standings-heading">
+
+                    <div>
+                        <span class="eyebrow">COMPETITION OVERVIEW</span>
+
+                        <h2>League Standings</h2>
+
+                        <p>
+                            Update team statistics to automatically
+                            calculate the standings.
+                        </p>
+                    </div>
+
+                    <span class="section-number">02</span>
+
+                </div>
+
+
+                <!-- TABLE STATUS -->
+                <div id="league-status"
+                     class="status-message"
+                     role="status"
+                     aria-live="polite">
+                    Loading league...
+                </div>
+
+
+                <!-- TABLE -->
+                <div class="table-wrapper">
+
+                    <table id="league-table">
+
+                        <thead>
+                            <tr>
+                                <th>POS</th>
+                                <th class="team-column">TEAM</th>
+                                <th>P</th>
+                                <th>W</th>
+                                <th>D</th>
+                                <th>L</th>
+                                <th>GF</th>
+                                <th>GA</th>
+                                <th>GD</th>
+                                <th>PTS</th>
+                            </tr>
+                        </thead>
+
+                        <tbody id="league-teams">
+                        </tbody>
+
+                    </table>
+
+                </div>
+
+
+                <!-- TABLE LEGEND -->
+                <div class="table-legend">
+
+                    <span><strong>P</strong> Played</span>
+                    <span><strong>W</strong> Won</span>
+                    <span><strong>D</strong> Drawn</span>
+                    <span><strong>L</strong> Lost</span>
+                    <span><strong>GF</strong> Goals For</span>
+                    <span><strong>GA</strong> Goals Against</span>
+                    <span><strong>GD</strong> Goal Difference</span>
+                    <span><strong>PTS</strong> Points</span>
+
+                </div>
+
+
+                <!-- ACTIONS -->
+                <div class="table-actions">
+
+                    <div class="action-description">
+                        <strong>League Actions</strong>
+
+                        <span>
+                            Export your standings or reset statistics.
+                        </span>
+                    </div>
+
+                    <div class="action-buttons">
+
+                        <button
+                            type="button"
+                            id="export-btn"
+                            class="btn btn-secondary"
+                        >
+                            ↓ Export CSV
+                        </button>
+
+                        <button
+                            type="button"
+                            id="reset-btn"
+                            class="btn btn-danger"
+                        >
+                            Reset Statistics
+                        </button>
+
+                    </div>
+
+                </div>
+
+            </section>
+
+
+            <!-- RULES -->
+            <section class="rules-panel">
+
+                <h3>League Point System</h3>
+
+                <div class="rules-grid">
+
+                    <div>
+                        <strong>3 Points</strong>
+                        <span>Win</span>
+                    </div>
+
+                    <div>
+                        <strong>1 Point</strong>
+                        <span>Draw</span>
+                    </div>
+
+                    <div>
+                        <strong>0 Points</strong>
+                        <span>Loss</span>
+                    </div>
+
+                </div>
+
+                <p>
+                    Teams are ranked by points, goal difference,
+                    goals scored and team name, in that order.
+                </p>
+
+            </section>
+
         </main>
+
+
+        <!-- FOOTER -->
+        <footer class="dashboard-footer">
+
+            <p>
+                © <span id="current-year"></span> Awarri.
+                Football League Management.
+            </p>
+
+            <a href="/">Back to Home</a>
+
+        </footer>
+
     </div>
+
 </body>
+
 </html>

@@ -1,0 +1,863 @@
+
+/* ==========================================
+   GLOBAL STYLES
+========================================== */
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+:root {
+    --primary: #172554;
+    --primary-light: #263f75;
+    --accent: #d4a72c;
+
+    --background: #f4f6fa;
+    --surface: #ffffff;
+
+    --text-primary: #172033;
+    --text-secondary: #687386;
+
+    --border: #e5e9f0;
+
+    --success: #15803d;
+    --success-bg: #dcfce7;
+
+    --danger: #dc2626;
+    --danger-bg: #fee2e2;
+
+    --radius: 12px;
+
+    --shadow: 0 4px 20px rgba(23, 37, 84, 0.05);
+}
+
+body {
+    font-family: Arial, Helvetica, sans-serif;
+    background: var(--background);
+    color: var(--text-primary);
+    line-height: 1.5;
+}
+
+button,
+input {
+    font: inherit;
+}
+
+button {
+    cursor: pointer;
+}
+
+a {
+    text-decoration: none;
+}
+
+
+/* ==========================================
+   APPLICATION LAYOUT
+========================================== */
+
+.league-app {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+.dashboard-main {
+    width: 100%;
+    max-width: 1250px;
+    margin: 0 auto;
+    padding: 35px 25px;
+    flex: 1;
+}
+
+
+/* ==========================================
+   HEADER
+========================================== */
+
+.dashboard-header {
+    background: var(--primary);
+    color: white;
+
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    padding: 16px 5%;
+    min-height: 85px;
+}
+
+.brand {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+}
+
+.brand img {
+    width: 55px;
+    height: 55px;
+    object-fit: contain;
+    border-radius: 8px;
+    background: white;
+}
+
+.brand div {
+    display: flex;
+    flex-direction: column;
+}
+
+.brand-name {
+    font-size: 20px;
+    font-weight: 800;
+    letter-spacing: 2px;
+}
+
+.brand-subtitle {
+    font-size: 10px;
+    letter-spacing: 1.5px;
+    opacity: 0.7;
+}
+
+.home-link {
+    color: white;
+    font-size: 14px;
+    font-weight: 600;
+    padding: 10px 16px;
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    border-radius: 8px;
+    transition: 0.2s;
+}
+
+.home-link:hover {
+    background: rgba(255, 255, 255, 0.1);
+}
+
+
+/* ==========================================
+   PAGE INTRODUCTION
+========================================== */
+
+.page-intro {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 20px;
+    margin-bottom: 30px;
+}
+
+.eyebrow {
+    font-size: 11px;
+    font-weight: 800;
+    letter-spacing: 1.5px;
+    color: var(--primary-light);
+}
+
+.page-intro h1 {
+    font-size: 32px;
+    font-weight: 800;
+    color: var(--primary);
+    margin: 6px 0;
+    text-align: left;
+}
+
+.page-intro p {
+    color: var(--text-secondary);
+    font-size: 14px;
+}
+
+.live-indicator {
+    display: flex;
+    align-items: center;
+    gap: 9px;
+    padding: 10px 14px;
+    background: white;
+    border: 1px solid var(--border);
+    border-radius: 30px;
+    font-size: 12px;
+    font-weight: 600;
+    white-space: nowrap;
+}
+
+.live-dot {
+    width: 9px;
+    height: 9px;
+    border-radius: 50%;
+    background: #16a34a;
+}
+
+
+/* ==========================================
+   SUMMARY CARDS
+========================================== */
+
+.summary-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 18px;
+    margin-bottom: 25px;
+}
+
+.summary-card {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+
+    background: var(--surface);
+    padding: 22px;
+
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+
+    box-shadow: var(--shadow);
+}
+
+.summary-icon {
+    width: 48px;
+    height: 48px;
+    border-radius: 12px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    font-size: 23px;
+    font-weight: bold;
+}
+
+.teams-icon {
+    background: #e8edff;
+    color: #3656a3;
+}
+
+.matches-icon {
+    background: #e1f5ec;
+    color: #15803d;
+}
+
+.goals-icon {
+    background: #fff4dc;
+    color: #b7791f;
+}
+
+.leader-icon {
+    background: #fce7f3;
+    color: #be185d;
+}
+
+.summary-label {
+    display: block;
+    color: var(--text-secondary);
+    font-size: 12px;
+    margin-bottom: 4px;
+}
+
+.summary-card h2 {
+    font-size: 23px;
+    color: var(--primary);
+    overflow-wrap: anywhere;
+}
+
+#league-leader {
+    font-size: 17px;
+}
+
+
+/* ==========================================
+   PANELS
+========================================== */
+
+.panel {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+
+    padding: 25px;
+    margin-bottom: 25px;
+
+    box-shadow: var(--shadow);
+}
+
+.panel-heading {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 15px;
+
+    margin-bottom: 22px;
+}
+
+.panel-heading h2 {
+    color: var(--primary);
+    font-size: 20px;
+    margin: 5px 0;
+}
+
+.panel-heading p {
+    color: var(--text-secondary);
+    font-size: 13px;
+}
+
+.section-number {
+    color: #a0a8b8;
+    font-size: 20px;
+    font-weight: 800;
+}
+
+
+/* ==========================================
+   LEAGUE CONFIGURATION
+========================================== */
+
+.setup-form {
+    display: flex;
+    align-items: flex-end;
+    gap: 15px;
+    flex-wrap: wrap;
+}
+
+.form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 7px;
+    width: 250px;
+}
+
+.form-group label {
+    font-size: 13px;
+    font-weight: 700;
+}
+
+.form-group input {
+    height: 43px;
+    border: 1px solid var(--border);
+    border-radius: 7px;
+    padding: 0 12px;
+    outline: none;
+    width: 100%;
+}
+
+.form-group input:focus {
+    border-color: var(--primary-light);
+    box-shadow: 0 0 0 3px rgba(38, 63, 117, 0.1);
+}
+
+.form-group small {
+    color: var(--text-secondary);
+    font-size: 11px;
+}
+
+
+/* ==========================================
+   BUTTONS
+========================================== */
+
+.league-app .btn {
+    min-height: 43px;
+    padding: 0 20px;
+
+    border: none;
+    border-radius: 7px;
+
+    font-size: 13px;
+    font-weight: 700;
+
+    transition: 0.2s ease;
+}
+
+.league-app .btn:hover {
+    transform: translateY(-1px);
+}
+
+.league-app .btn:focus-visible,
+.league-app a:focus-visible {
+    outline: 3px solid var(--accent);
+    outline-offset: 3px;
+}
+
+.btn-primary {
+    background: var(--primary);
+    color: white;
+}
+
+.btn-primary:hover {
+    background: var(--primary-light);
+}
+
+.btn-secondary {
+    background: #e8edff;
+    color: var(--primary);
+}
+
+.btn-secondary:hover {
+    background: #dce4ff;
+}
+
+.btn-danger {
+    background: var(--danger-bg);
+    color: var(--danger);
+}
+
+.btn-danger:hover {
+    background: #fecaca;
+}
+
+
+/* ==========================================
+   STATUS MESSAGES
+========================================== */
+
+.status-message {
+    padding: 12px 15px;
+    margin-bottom: 18px;
+
+    border-radius: 7px;
+
+    font-size: 12px;
+    font-weight: 600;
+
+    background: #eff6ff;
+    color: #1d4ed8;
+}
+
+.status-success {
+    background: var(--success-bg);
+    color: var(--success);
+}
+
+.status-error {
+    background: var(--danger-bg);
+    color: var(--danger);
+}
+
+
+/* ==========================================
+   LEAGUE TABLE
+========================================== */
+
+.table-wrapper {
+    width: 100%;
+    overflow-x: auto;
+    border: 1px solid var(--border);
+    border-radius: 9px;
+}
+
+#league-table {
+    width: 100%;
+    min-width: 850px;
+    border-collapse: collapse;
+    background: white;
+}
+
+#league-table th {
+    background: #f3f5f9;
+    color: #5e6b80;
+
+    padding: 15px 10px;
+
+    font-size: 11px;
+    font-weight: 800;
+
+    letter-spacing: 0.5px;
+    text-align: center;
+    white-space: nowrap;
+}
+
+#league-table th:first-child {
+    padding-left: 18px;
+}
+
+#league-table td {
+    padding: 11px 8px;
+
+    text-align: center;
+
+    border-bottom: 1px solid var(--border);
+    font-size: 13px;
+}
+
+#league-table tbody tr {
+    transition: background 0.2s;
+}
+
+#league-table tbody tr:hover {
+    background: #f8faff;
+}
+
+#league-table tbody tr:last-child td {
+    border-bottom: none;
+}
+
+.team-column {
+    min-width: 160px;
+    text-align: left !important;
+}
+
+#league-table .team-name {
+    width: 100%;
+    min-width: 120px;
+
+    height: 36px;
+
+    border: 1px solid transparent;
+    border-radius: 5px;
+
+    padding: 5px 8px;
+
+    background: transparent;
+
+    color: var(--primary);
+    font-weight: 700;
+    font-size: 13px;
+}
+
+#league-table .team-name:hover,
+#league-table .team-name:focus {
+    background: white;
+    border-color: var(--border);
+    outline: none;
+}
+
+#league-table .stat-input {
+    width: 48px;
+    height: 34px;
+
+    text-align: center;
+
+    border: 1px solid var(--border);
+    border-radius: 5px;
+
+    background: white;
+
+    font-size: 13px;
+    color: var(--text-primary);
+
+    outline: none;
+}
+
+#league-table .stat-input:focus {
+    border-color: var(--primary-light);
+    box-shadow: 0 0 0 2px rgba(38, 63, 117, 0.1);
+}
+
+#league-table .calculated-cell {
+    color: var(--primary);
+    font-weight: 700;
+}
+
+#league-table td:last-child {
+    font-weight: 800;
+    color: var(--primary);
+}
+
+.position-badge {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+
+    width: 27px;
+    height: 27px;
+
+    border-radius: 7px;
+
+    background: #f0f2f6;
+    color: var(--text-secondary);
+
+    font-size: 12px;
+    font-weight: 800;
+}
+
+.first-position {
+    background: #fff0c2;
+    color: #956300;
+}
+
+.invalid-row {
+    background: #fff5f5 !important;
+}
+
+.invalid-input {
+    border: 1px solid var(--danger) !important;
+    background: #fff1f2 !important;
+}
+
+
+/* ==========================================
+   TABLE LEGEND
+========================================== */
+
+.table-legend {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 15px;
+
+    padding: 16px 0;
+
+    color: var(--text-secondary);
+    font-size: 11px;
+}
+
+.table-legend strong {
+    color: var(--primary);
+    margin-right: 3px;
+}
+
+
+/* ==========================================
+   TABLE ACTIONS
+========================================== */
+
+.table-actions {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    gap: 20px;
+
+    padding-top: 20px;
+    border-top: 1px solid var(--border);
+}
+
+.action-description {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.action-description strong {
+    font-size: 13px;
+}
+
+.action-description span {
+    color: var(--text-secondary);
+    font-size: 11px;
+}
+
+.action-buttons {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+
+
+/* ==========================================
+   POINT SYSTEM
+========================================== */
+
+.rules-panel {
+    background: white;
+
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+
+    padding: 22px;
+
+    box-shadow: var(--shadow);
+}
+
+.rules-panel h3 {
+    color: var(--primary);
+    font-size: 15px;
+    margin-bottom: 18px;
+}
+
+.rules-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 15px;
+}
+
+.rules-grid div {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+
+    padding: 15px;
+
+    border-radius: 8px;
+    background: #f5f7fb;
+}
+
+.rules-grid strong {
+    color: var(--primary);
+    font-size: 15px;
+}
+
+.rules-grid span {
+    color: var(--text-secondary);
+    font-size: 12px;
+}
+
+.rules-panel > p {
+    margin-top: 18px;
+    font-size: 12px;
+    color: var(--text-secondary);
+}
+
+
+/* ==========================================
+   FOOTER
+========================================== */
+
+.dashboard-footer {
+    background: var(--primary);
+    color: white;
+
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    padding: 20px 5%;
+
+    font-size: 12px;
+}
+
+.dashboard-footer a {
+    color: white;
+    font-weight: 700;
+}
+
+
+/* ==========================================
+   RESPONSIVE DESIGN
+========================================== */
+
+@media screen and (max-width: 900px) {
+
+    .summary-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .dashboard-main {
+        padding: 25px 18px;
+    }
+
+}
+
+@media screen and (max-width: 600px) {
+
+    .dashboard-header {
+        padding: 13px 16px;
+    }
+
+    .brand img {
+        width: 42px;
+        height: 42px;
+    }
+
+    .brand-name {
+        font-size: 16px;
+    }
+
+    .brand-subtitle {
+        font-size: 8px;
+    }
+
+    .home-link {
+        padding: 8px 11px;
+        font-size: 12px;
+    }
+
+    .dashboard-main {
+        padding: 22px 12px;
+    }
+
+    .page-intro {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .page-intro h1 {
+        font-size: 26px;
+    }
+
+    .summary-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 10px;
+    }
+
+    .summary-card {
+        padding: 14px 10px;
+        gap: 9px;
+    }
+
+    .summary-icon {
+        width: 36px;
+        height: 36px;
+        font-size: 18px;
+    }
+
+    .summary-card h2 {
+        font-size: 19px;
+    }
+
+    .summary-label {
+        font-size: 10px;
+    }
+
+    .panel {
+        padding: 16px 12px;
+    }
+
+    .panel-heading h2 {
+        font-size: 17px;
+    }
+
+    .setup-form {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .form-group {
+        width: 100%;
+    }
+
+    .setup-form .btn {
+        width: 100%;
+    }
+
+    .table-actions {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .action-buttons {
+        flex-direction: column;
+    }
+
+    .action-buttons .btn {
+        width: 100%;
+    }
+
+    .rules-grid {
+        gap: 8px;
+    }
+
+    .rules-grid div {
+        padding: 10px;
+    }
+
+    .rules-grid strong {
+        font-size: 13px;
+    }
+
+    .rules-grid span {
+        font-size: 11px;
+    }
+
+    .dashboard-footer {
+        flex-direction: column;
+        gap: 10px;
+        text-align: center;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+        scroll-behavior: auto !important;
+        transition-duration: 0.01ms !important;
+    }
+}
