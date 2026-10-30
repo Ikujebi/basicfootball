@@ -1,144 +1,129 @@
 
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-    <meta name="theme-color" content="#172554">
-    <meta name="description" content="Football League Management Dashboard">
+    <meta name="theme-color" content="#101d3a">
+    <meta name="description" content="Awarri Football League Management Dashboard">
 
     <title>Football League | Awarri</title>
 
-    <link rel="icon" type="image/svg+xml" href="/image/awarri.png">
-    <link rel="stylesheet" href="league.css">
+    <link rel="icon" type="image/png" href="/image/awarri.png">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 
+    <link rel="stylesheet" href="league.css">
     <script src="league.js" defer></script>
 </head>
 
 <body>
+    <div class="app-shell">
 
-    <div class="league-app">
-
-        <!-- HEADER -->
-        <header class="dashboard-header">
-
-            <div class="brand">
-                <img src="/image/awarri image.png" alt="Awarri Logo">
-
-                <div>
-                    <span class="brand-name">AWARRI</span>
-                    <span class="brand-subtitle">LEAGUE MANAGEMENT</span>
-                </div>
-            </div>
-
-            <a href="/" class="home-link">
-                <span>←</span> Home
+        <header class="topbar">
+            <a href="/" class="brand">
+                <img src="/image/awarri image.png" alt="Awarri logo">
+                <span class="brand-copy">
+                    <strong>AWARRI</strong>
+                    <small>LEAGUE MANAGEMENT</small>
+                </span>
             </a>
 
+            <div class="topbar-right">
+                <span class="system-status">
+                    <span class="status-dot"></span>
+                    League dashboard
+                </span>
+                <a href="/" class="home-link">
+                    <span aria-hidden="true">←</span> Home
+                </a>
+            </div>
         </header>
 
-        <main class="dashboard-main">
+        <main class="main-content">
 
-            <!-- PAGE INTRODUCTION -->
-            <section class="page-intro">
+            <section class="hero-section">
+                <div class="hero-copy">
+                    <div class="eyebrow">
+                        <span class="eyebrow-line"></span>
+                        COMPETITION MANAGEMENT
+                    </div>
 
-                <div>
-                    <span class="eyebrow">COMPETITION MANAGEMENT</span>
-
-                    <h1>Football League</h1>
+                    <h1>Football <span>League</span></h1>
 
                     <p>
-                        Manage your teams, track match statistics
-                        and monitor league standings.
+                        Manage your competition, update team performance
+                        and keep track of the standings.
                     </p>
                 </div>
 
-                <div class="live-indicator">
-                    <span class="live-dot"></span>
-                    League Dashboard
+                <div class="hero-season">
+                    <span class="season-icon">⚽</span>
+                    <div>
+                        <small>COMPETITION</small>
+                        <strong>Awarri League</strong>
+                    </div>
                 </div>
-
             </section>
 
+            <!-- DASHBOARD SUMMARY -->
+            <section class="stats-grid" aria-label="League summary">
 
-            <!-- SUMMARY CARDS -->
-            <section class="summary-grid">
-
-                <article class="summary-card">
-
-                    <div class="summary-icon teams-icon">♟</div>
-
-                    <div>
-                        <span class="summary-label">Total Teams</span>
-                        <h2 id="total-teams">0</h2>
+                <article class="stat-card">
+                    <div class="stat-card-top">
+                        <span class="stat-icon icon-teams">♟</span>
+                        <span class="stat-caption">COMPETITION</span>
                     </div>
-
+                    <span class="stat-value" id="total-teams">0</span>
+                    <span class="stat-label">Total Teams</span>
                 </article>
 
-
-                <article class="summary-card">
-
-                    <div class="summary-icon matches-icon">⚽</div>
-
-                    <div>
-                        <span class="summary-label">Matches Recorded</span>
-                        <h2 id="total-matches">0</h2>
+                <article class="stat-card">
+                    <div class="stat-card-top">
+                        <span class="stat-icon icon-matches">⚽</span>
+                        <span class="stat-caption">FIXTURES</span>
                     </div>
-
+                    <span class="stat-value" id="total-matches">0</span>
+                    <span class="stat-label">Matches Recorded</span>
                 </article>
 
-
-                <article class="summary-card">
-
-                    <div class="summary-icon goals-icon">◎</div>
-
-                    <div>
-                        <span class="summary-label">Total Goals</span>
-                        <h2 id="total-goals">0</h2>
+                <article class="stat-card">
+                    <div class="stat-card-top">
+                        <span class="stat-icon icon-goals">◎</span>
+                        <span class="stat-caption">PERFORMANCE</span>
                     </div>
-
+                    <span class="stat-value" id="total-goals">0</span>
+                    <span class="stat-label">Goals Scored</span>
                 </article>
 
-
-                <article class="summary-card">
-
-                    <div class="summary-icon leader-icon">🏆</div>
-
-                    <div>
-                        <span class="summary-label">League Leader</span>
-                        <h2 id="league-leader">—</h2>
+                <article class="stat-card leader-card">
+                    <div class="stat-card-top">
+                        <span class="stat-icon icon-leader">🏆</span>
+                        <span class="stat-caption">TOP POSITION</span>
                     </div>
-
+                    <span class="stat-value leader-value" id="league-leader">—</span>
+                    <span class="stat-label">League Leader</span>
                 </article>
 
             </section>
-
 
             <!-- LEAGUE CONFIGURATION -->
             <section class="panel configuration-panel">
 
-                <div class="panel-heading">
-
-                    <div>
+                <div class="section-heading">
+                    <div class="section-heading-copy">
+                        <span class="section-kicker">01 / SETUP</span>
                         <h2>League Configuration</h2>
-
-                        <p>
-                            Configure the number of participating teams.
-                        </p>
+                        <p>Set the number of teams participating in your competition.</p>
                     </div>
-
-                    <span class="section-number">01</span>
-
+                    <span class="heading-symbol">⚙</span>
                 </div>
 
-                <form id="setup-form" class="setup-form">
+                <form id="setup-form" class="configuration-form">
 
-                    <div class="form-group">
-
-                        <label for="numTeams">Number of Teams</label>
-
+                    <div class="form-field">
+                        <label for="numTeams">Number of teams</label>
                         <input
                             type="number"
                             id="numTeams"
@@ -147,81 +132,196 @@
                             value="4"
                             required
                         >
-
-                        <small>Minimum 2 teams, maximum 30 teams.</small>
-
+                        <small>Choose between 2 and 30 teams.</small>
                     </div>
 
                     <button type="submit" class="btn btn-primary">
-                        Generate League
+                        <span>Generate League</span>
+                        <span aria-hidden="true">→</span>
                     </button>
 
                 </form>
-
             </section>
 
+            <!-- STATISTICS UPDATE -->
+            <section class="panel update-panel">
 
-            <!-- STANDINGS -->
-            <section class="panel standings-panel">
-
-                <div class="panel-heading standings-heading">
-
-                    <div>
-                        <span class="eyebrow">COMPETITION OVERVIEW</span>
-
-                        <h2>League Standings</h2>
-
-                        <p>
-                            Update team statistics to automatically
-                            calculate the standings.
-                        </p>
+                <div class="section-heading">
+                    <div class="section-heading-copy">
+                        <span class="section-kicker">02 / TEAM MANAGEMENT</span>
+                        <h2>Update Statistics</h2>
+                        <p>Make controlled adjustments to an individual team's performance.</p>
                     </div>
-
-                    <span class="section-number">02</span>
-
+                    <span class="heading-symbol">✎</span>
                 </div>
 
+                <div class="update-layout">
 
-                <!-- TABLE STATUS -->
-                <div id="league-status"
-                     class="status-message"
-                     role="status"
-                     aria-live="polite">
+                    <form id="update-form" class="update-form">
+
+                        <div class="form-field">
+                            <label for="update-team">Select team</label>
+                            <select id="update-team" required>
+                                <option value="">Select a team</option>
+                            </select>
+                        </div>
+
+                        <div class="form-field">
+                            <label for="update-field">Statistic to update</label>
+                            <select id="update-field" required>
+                                <option value="won">Matches Won (W)</option>
+                                <option value="drawn">Matches Drawn (D)</option>
+                                <option value="lost">Matches Lost (L)</option>
+                                <option value="gf">Goals For (GF)</option>
+                                <option value="ga">Goals Against (GA)</option>
+                            </select>
+                        </div>
+
+                        <div class="form-field">
+                            <label for="update-action">Update action</label>
+                            <select id="update-action" required>
+                                <option value="increase">Increase value (+)</option>
+                                <option value="decrease">Reduce value (−)</option>
+                                <option value="set">Set exact value (=)</option>
+                            </select>
+                        </div>
+
+                        <div class="form-field">
+                            <label for="update-amount">Enter amount</label>
+                            <input
+                                type="number"
+                                id="update-amount"
+                                min="0"
+                                step="1"
+                                inputmode="numeric"
+                                placeholder="Enter a number"
+                                required
+                            >
+                            <small>Use whole numbers only.</small>
+                        </div>
+
+                        <div class="update-preview" id="update-preview" aria-live="polite">
+                            <div class="preview-icon">↗</div>
+                            <div class="preview-copy">
+                                <span>UPDATE PREVIEW</span>
+                                <strong id="preview-text">Select a team and enter an amount.</strong>
+                            </div>
+                        </div>
+
+                        <button type="submit" class="btn btn-primary update-submit">
+                            <span>Apply Update</span>
+                            <span aria-hidden="true">→</span>
+                        </button>
+
+                    </form>
+
+                    <aside class="update-guide">
+                        <div class="guide-icon">✦</div>
+                        <h3>How updates work</h3>
+                        <p>
+                            Select a team, choose a statistic and decide how
+                            you want to adjust its value.
+                        </p>
+
+                        <div class="guide-item">
+                            <span class="guide-symbol increase-symbol">+</span>
+                            <div>
+                                <strong>Increase</strong>
+                                <small>Add to the existing value.</small>
+                            </div>
+                        </div>
+
+                        <div class="guide-item">
+                            <span class="guide-symbol decrease-symbol">−</span>
+                            <div>
+                                <strong>Reduce</strong>
+                                <small>Subtract from the existing value.</small>
+                            </div>
+                        </div>
+
+                        <div class="guide-item">
+                            <span class="guide-symbol set-symbol">=</span>
+                            <div>
+                                <strong>Set exact value</strong>
+                                <small>Replace the existing value.</small>
+                            </div>
+                        </div>
+
+                        <div class="guide-note">
+                            <span>ⓘ</span>
+                            Played, Goal Difference and Points are calculated automatically.
+                        </div>
+                    </aside>
+
+                </div>
+            </section>
+
+            <!-- LEAGUE STANDINGS -->
+            <section class="panel standings-panel">
+
+                <div class="section-heading standings-heading">
+                    <div class="section-heading-copy">
+                        <span class="section-kicker">03 / COMPETITION OVERVIEW</span>
+                        <h2>League Standings</h2>
+                        <p>Live team rankings based on their performance.</p>
+                    </div>
+
+                    <div class="standings-count">
+                        <span class="status-dot"></span>
+                        <span id="standings-count">0 TEAMS</span>
+                    </div>
+                </div>
+
+                <div
+                    id="league-status"
+                    class="status-message"
+                    role="status"
+                    aria-live="polite"
+                >
                     Loading league...
                 </div>
 
+                <div class="table-container">
 
-                <!-- TABLE -->
-                <div class="table-wrapper">
+                    <div class="table-toolbar">
+                        <div>
+                            <strong>Official Standings</strong>
+                            <span>Automatically ranked table</span>
+                        </div>
+                        <span class="table-hint">↔ Swipe horizontally to view all columns</span>
+                    </div>
 
-                    <table id="league-table">
+                    <div
+                        class="table-wrapper"
+                        role="region"
+                        aria-label="League standings table"
+                        tabindex="0"
+                    >
+                        <table id="league-table">
 
-                        <thead>
-                            <tr>
-                                <th>POS</th>
-                                <th class="team-column">TEAM</th>
-                                <th>P</th>
-                                <th>W</th>
-                                <th>D</th>
-                                <th>L</th>
-                                <th>GF</th>
-                                <th>GA</th>
-                                <th>GD</th>
-                                <th>PTS</th>
-                            </tr>
-                        </thead>
+                            <thead>
+                                <tr>
+                                    <th class="position-column">POS</th>
+                                    <th class="team-column">TEAM</th>
+                                    <th>P</th>
+                                    <th>W</th>
+                                    <th>D</th>
+                                    <th>L</th>
+                                    <th>GF</th>
+                                    <th>GA</th>
+                                    <th>GD</th>
+                                    <th class="points-column">PTS</th>
+                                </tr>
+                            </thead>
 
-                        <tbody id="league-teams">
-                        </tbody>
+                            <tbody id="league-teams"></tbody>
 
-                    </table>
+                        </table>
+                    </div>
 
                 </div>
 
-
-                <!-- TABLE LEGEND -->
                 <div class="table-legend">
-
                     <span><strong>P</strong> Played</span>
                     <span><strong>W</strong> Won</span>
                     <span><strong>D</strong> Drawn</span>
@@ -230,94 +330,65 @@
                     <span><strong>GA</strong> Goals Against</span>
                     <span><strong>GD</strong> Goal Difference</span>
                     <span><strong>PTS</strong> Points</span>
-
                 </div>
 
-
-                <!-- ACTIONS -->
                 <div class="table-actions">
-
                     <div class="action-description">
                         <strong>League Actions</strong>
-
-                        <span>
-                            Export your standings or reset statistics.
-                        </span>
+                        <span>Export your standings or reset team statistics.</span>
                     </div>
 
                     <div class="action-buttons">
-
-                        <button
-                            type="button"
-                            id="export-btn"
-                            class="btn btn-secondary"
-                        >
-                            ↓ Export CSV
+                        <button type="button" id="export-btn" class="btn btn-secondary">
+                            <span>↓</span> Export CSV
                         </button>
 
-                        <button
-                            type="button"
-                            id="reset-btn"
-                            class="btn btn-danger"
-                        >
+                        <button type="button" id="reset-btn" class="btn btn-danger">
                             Reset Statistics
                         </button>
-
                     </div>
-
                 </div>
 
             </section>
 
-
-            <!-- RULES -->
+            <!-- POINT SYSTEM -->
             <section class="rules-panel">
-
-                <h3>League Point System</h3>
+                <div class="rules-heading">
+                    <div>
+                        <span class="section-kicker">COMPETITION RULES</span>
+                        <h2>League Point System</h2>
+                    </div>
+                    <span class="rules-trophy">🏆</span>
+                </div>
 
                 <div class="rules-grid">
-
-                    <div>
-                        <strong>3 Points</strong>
-                        <span>Win</span>
+                    <div class="rule-item">
+                        <strong>3 <span>PTS</span></strong>
+                        <small>Win</small>
                     </div>
-
-                    <div>
-                        <strong>1 Point</strong>
-                        <span>Draw</span>
+                    <div class="rule-item">
+                        <strong>1 <span>PT</span></strong>
+                        <small>Draw</small>
                     </div>
-
-                    <div>
-                        <strong>0 Points</strong>
-                        <span>Loss</span>
+                    <div class="rule-item">
+                        <strong>0 <span>PTS</span></strong>
+                        <small>Loss</small>
                     </div>
-
                 </div>
 
                 <p>
-                    Teams are ranked by points, goal difference,
-                    goals scored and team name, in that order.
+                    Teams are ranked by points, goal difference, goals scored
+                    and team name, in that order.
                 </p>
-
             </section>
 
         </main>
 
-
-        <!-- FOOTER -->
-        <footer class="dashboard-footer">
-
-            <p>
-                © <span id="current-year"></span> Awarri.
-                Football League Management.
-            </p>
-
-            <a href="/">Back to Home</a>
-
+        <footer class="footer">
+            <p>© <span id="current-year"></span> Awarri. All rights reserved.</p>
+            <a href="/">Back to Home ↑</a>
         </footer>
 
     </div>
-
 </body>
-
 </html>

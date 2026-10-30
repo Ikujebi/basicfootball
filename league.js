@@ -12,6 +12,29 @@ document.addEventListener("DOMContentLoaded", () => {
     const MIN_TEAMS = 2;
     const MAX_TEAMS = 30;
 
+    const STAT_FIELDS = {
+        won: {
+            label: "Matches Won",
+            short: "W"
+        },
+        drawn: {
+            label: "Matches Drawn",
+            short: "D"
+        },
+        lost: {
+            label: "Matches Lost",
+            short: "L"
+        },
+        gf: {
+            label: "Goals For",
+            short: "GF"
+        },
+        ga: {
+            label: "Goals Against",
+            short: "GA"
+        }
+    };
+
 
     // ==========================================
     // DOM ELEMENTS
@@ -20,6 +43,15 @@ document.addEventListener("DOMContentLoaded", () => {
     const elements = {
         setupForm: document.getElementById("setup-form"),
         numTeams: document.getElementById("numTeams"),
+
+        updateForm: document.getElementById("update-form"),
+        updateTeam: document.getElementById("update-team"),
+        updateField: document.getElementById("update-field"),
+        updateAction: document.getElementById("update-action"),
+        updateAmount: document.getElementById("update-amount"),
+        updatePreview: document.getElementById("update-preview"),
+        previewText: document.getElementById("preview-text"),
+
         leagueTeams: document.getElementById("league-teams"),
         leagueStatus: document.getElementById("league-status"),
 
@@ -27,11 +59,25 @@ document.addEventListener("DOMContentLoaded", () => {
         totalMatches: document.getElementById("total-matches"),
         totalGoals: document.getElementById("total-goals"),
         leagueLeader: document.getElementById("league-leader"),
+        standingsCount: document.getElementById("standings-count"),
 
         exportBtn: document.getElementById("export-btn"),
         resetBtn: document.getElementById("reset-btn"),
         currentYear: document.getElementById("current-year")
     };
+
+
+    // ==========================================
+    // VALIDATE REQUIRED ELEMENTS
+    // ==========================================
+
+    for (const [name, element] of Object.entries(elements)) {
+
+        if (!element) {
+            console.error(`Required HTML element missing: ${name}`);
+            return;
+        }
+    }
 
 
     // ==========================================
@@ -42,14 +88,14 @@ document.addEventListener("DOMContentLoaded", () => {
 
 
     // ==========================================
-    // HELPERS
+    // GENERAL HELPERS
     // ==========================================
 
     function createTeam(index) {
 
         return {
-            id: `team-${Date.now()}-${index}`,
-            name: `Team ${String.fromCharCode(65 + index)}`,
+            id: `team-${Date.now()}-${index}-${Math.random().toString(36).slice(2, 8)}`,
+            name: `Team ${index + 1}`,
 
             won: "0",
             drawn: "0",
@@ -57,14 +103,6 @@ document.addEventListener("DOMContentLoaded", () => {
             gf: "0",
             ga: "0"
         };
-    }
-
-
-    function escapeCSV(value) {
-
-        const text = String(value ?? "");
-
-        return `"${text.replace(/"/g, '""')}"`;
     }
 
 
@@ -91,6 +129,28 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
 
+    function formatNumber(value) {
+
+        return Number(value).toLocaleString("en-NG");
+    }
+
+
+    function escapeCSV(value) {
+
+        return `"${String(value ?? "").replace(/"/g, '""')}"`;
+    }
+
+
+    function getTeamById(teamId) {
+
+        return teams.find(team => team.id === teamId) || null;
+    }
+
+
+    // ==========================================
+    // TEAM STATISTICS
+    // ==========================================
+
     function getTeamStats(team) {
 
         const won = getNumericValue(team.won);
@@ -112,7 +172,9 @@ document.addEventListener("DOMContentLoaded", () => {
         }
 
         const played = won + drawn + lost;
+
         const goalDifference = gf - ga;
+
         const points = (won * 3) + drawn;
 
         return {
@@ -128,18 +190,31 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
 
-    function isValidTeamName(team, allTeams) {
+    function isValidTeamName(team, allTeams = teams) {
 
         const name = team.name.trim().toLowerCase();
 
-        if (!name) return false;
+        if (!name) {
+            return false;
+        }
 
         return allTeams.every(otherTeam => {
 
-            if (otherTeam.id === team.id) return true;
+            if (otherTeam.id === team.id) {
+                return true;
+            }
 
             return otherTeam.name.trim().toLowerCase() !== name;
         });
+    }
+
+
+    function isValidTeam(team) {
+
+        return (
+            getTeamStats(team) !== null &&
+            isValidTeamName(team)
+        );
     }
 
 
@@ -150,7 +225,6 @@ document.addEventListener("DOMContentLoaded", () => {
             const statsA = getTeamStats(a);
             const statsB = getTeamStats(b);
 
-            // Valid teams appear before invalid teams.
             if (statsA && !statsB) return -1;
             if (!statsA && statsB) return 1;
 
@@ -158,24 +232,26 @@ document.addEventListener("DOMContentLoaded", () => {
                 return a.name.localeCompare(b.name);
             }
 
-            // 1. Highest points.
+            // 1. Points.
+
             if (statsA.points !== statsB.points) {
                 return statsB.points - statsA.points;
             }
 
-            // 2. Highest goal difference.
-            if (
-                statsA.goalDifference !== statsB.goalDifference
-            ) {
+            // 2. Goal difference.
+
+            if (statsA.goalDifference !== statsB.goalDifference) {
                 return statsB.goalDifference - statsA.goalDifference;
             }
 
-            // 3. Highest goals scored.
+            // 3. Goals scored.
+
             if (statsA.gf !== statsB.gf) {
                 return statsB.gf - statsA.gf;
             }
 
             // 4. Alphabetical order.
+
             return a.name.localeCompare(b.name);
         });
     }
@@ -194,14 +270,18 @@ document.addEventListener("DOMContentLoaded", () => {
                 JSON.stringify(teams)
             );
 
+            return true;
+
         } catch (error) {
 
             console.error("Unable to save league:", error);
 
             setStatus(
-                "Unable to save changes. Check your browser storage settings.",
+                "Unable to save your changes. Check your browser storage settings.",
                 "error"
             );
+
+            return false;
         }
     }
 
@@ -212,7 +292,9 @@ document.addEventListener("DOMContentLoaded", () => {
 
             const savedData = localStorage.getItem(STORAGE_KEY);
 
-            if (!savedData) return false;
+            if (!savedData) {
+                return false;
+            }
 
             const parsedData = JSON.parse(savedData);
 
@@ -238,7 +320,17 @@ document.addEventListener("DOMContentLoaded", () => {
                 );
             });
 
-            if (!validData) return false;
+            if (!validData) {
+                return false;
+            }
+
+            const uniqueIds = new Set(
+                parsedData.map(team => team.id)
+            );
+
+            if (uniqueIds.size !== parsedData.length) {
+                return false;
+            }
 
             teams = parsedData;
 
@@ -246,7 +338,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
         } catch (error) {
 
-            console.error("Unable to load league:", error);
+            console.error("Unable to restore league:", error);
 
             return false;
         }
@@ -254,7 +346,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
 
     // ==========================================
-    // STATUS MESSAGE
+    // STATUS MESSAGES
     // ==========================================
 
     function setStatus(message, type = "info") {
@@ -263,6 +355,294 @@ document.addEventListener("DOMContentLoaded", () => {
 
         elements.leagueStatus.className =
             `status-message status-${type}`;
+    }
+
+
+    // ==========================================
+    // TEAM DROPDOWN
+    // ==========================================
+
+    function updateTeamDropdown() {
+
+        const previousSelection = elements.updateTeam.value;
+
+        const fragment = document.createDocumentFragment();
+
+        const defaultOption = document.createElement("option");
+
+        defaultOption.value = "";
+        defaultOption.textContent = "Select a team";
+
+        fragment.appendChild(defaultOption);
+
+        getSortedTeams().forEach(team => {
+
+            const option = document.createElement("option");
+
+            option.value = team.id;
+            option.textContent = team.name;
+
+            fragment.appendChild(option);
+        });
+
+        elements.updateTeam.replaceChildren(fragment);
+
+        const selectionStillExists = teams.some(team => {
+            return team.id === previousSelection;
+        });
+
+        if (selectionStillExists) {
+            elements.updateTeam.value = previousSelection;
+        }
+
+        updatePreview();
+    }
+
+
+    // ==========================================
+    // UPDATE PREVIEW
+    // ==========================================
+
+    function updatePreview() {
+
+        const team = getTeamById(elements.updateTeam.value);
+
+        const field = elements.updateField.value;
+
+        const action = elements.updateAction.value;
+
+        const amount = getNumericValue(elements.updateAmount.value);
+
+        if (!team) {
+
+            elements.previewText.textContent =
+                "Select a team and enter an amount.";
+
+            elements.updatePreview.classList.remove("preview-valid");
+
+            return;
+        }
+
+        if (!STAT_FIELDS[field]) {
+
+            elements.previewText.textContent =
+                "Select a valid statistic.";
+
+            return;
+        }
+
+        if (amount === null) {
+
+            elements.previewText.textContent =
+                `Current ${STAT_FIELDS[field].label}: ${formatNumber(team[field])}`;
+
+            elements.updatePreview.classList.remove("preview-valid");
+
+            return;
+        }
+
+        const currentValue = getNumericValue(team[field]);
+
+        if (currentValue === null) {
+
+            elements.previewText.textContent =
+                "The selected team's current statistic is invalid.";
+
+            return;
+        }
+
+        let newValue;
+
+        if (action === "increase") {
+
+            newValue = currentValue + amount;
+
+        } else if (action === "decrease") {
+
+            newValue = currentValue - amount;
+
+        } else {
+
+            newValue = amount;
+        }
+
+        if (
+            !Number.isSafeInteger(newValue) ||
+            newValue < 0
+        ) {
+
+            elements.previewText.textContent =
+                "This update would produce an invalid negative value.";
+
+            elements.updatePreview.classList.remove("preview-valid");
+
+            return;
+        }
+
+        const actionLabels = {
+            increase: "Increase",
+            decrease: "Reduce",
+            set: "Set"
+        };
+
+        const preview = `${actionLabels[action]} ${team.name}'s ${STAT_FIELDS[field].label} from ${formatNumber(currentValue)} to ${formatNumber(newValue)}.`;
+
+        elements.previewText.textContent = preview;
+
+        elements.updatePreview.classList.add("preview-valid");
+    }
+
+
+    // ==========================================
+    // APPLY STATISTICS UPDATE
+    // ==========================================
+
+    function applyStatisticsUpdate(event) {
+
+        event.preventDefault();
+
+        const team = getTeamById(elements.updateTeam.value);
+
+        const field = elements.updateField.value;
+
+        const action = elements.updateAction.value;
+
+        const amount = getNumericValue(elements.updateAmount.value);
+
+        if (!team) {
+
+            setStatus(
+                "Please select a team before applying an update.",
+                "error"
+            );
+
+            return;
+        }
+
+        if (!STAT_FIELDS[field]) {
+
+            setStatus(
+                "Please select a valid statistic.",
+                "error"
+            );
+
+            return;
+        }
+
+        if (amount === null) {
+
+            setStatus(
+                "Please enter a valid non-negative whole number.",
+                "error"
+            );
+
+            elements.updateAmount.focus();
+
+            return;
+        }
+
+        const currentValue = getNumericValue(team[field]);
+
+        if (currentValue === null) {
+
+            setStatus(
+                "The current statistic is invalid. Please review the team data.",
+                "error"
+            );
+
+            return;
+        }
+
+        let newValue;
+
+        if (action === "increase") {
+
+            newValue = currentValue + amount;
+
+        } else if (action === "decrease") {
+
+            newValue = currentValue - amount;
+
+        } else if (action === "set") {
+
+            newValue = amount;
+
+        } else {
+
+            setStatus(
+                "Invalid update action selected.",
+                "error"
+            );
+
+            return;
+        }
+
+        if (
+            !Number.isSafeInteger(newValue) ||
+            newValue < 0
+        ) {
+
+            setStatus(
+                "This update is not allowed. Statistics cannot be negative.",
+                "error"
+            );
+
+            return;
+        }
+
+        if (newValue === currentValue) {
+
+            setStatus(
+                "No changes were made because the new value is the same as the current value.",
+                "info"
+            );
+
+            return;
+        }
+
+        const actionLabels = {
+            increase: "increase",
+            decrease: "reduce",
+            set: "set"
+        };
+
+        const confirmation = window.confirm(
+            `Confirm update?\n\nTeam: ${team.name}\nStatistic: ${STAT_FIELDS[field].label}\nCurrent value: ${currentValue}\nAction: ${actionLabels[action]}\nNew value: ${newValue}\n\nDo you want to continue?`
+        );
+
+        if (!confirmation) {
+            return;
+        }
+
+        const previousValue = team[field];
+
+        team[field] = String(newValue);
+
+        if (!saveLeague()) {
+
+            team[field] = previousValue;
+
+            renderLeague();
+
+            updateTeamDropdown();
+
+            updatePreview();
+
+            return;
+        }
+
+        renderLeague();
+
+        updateTeamDropdown();
+
+        elements.updateAmount.value = "";
+
+        updatePreview();
+
+        setStatus(
+            `${team.name}'s ${STAT_FIELDS[field].label} successfully updated from ${currentValue} to ${newValue}.`,
+            "success"
+        );
     }
 
 
@@ -283,181 +663,260 @@ document.addEventListener("DOMContentLoaded", () => {
         ) {
 
             setStatus(
-                `Please enter between ${MIN_TEAMS} and ${MAX_TEAMS} teams.`,
+                `Please enter a number between ${MIN_TEAMS} and ${MAX_TEAMS}.`,
                 "error"
             );
 
             return;
         }
 
-
         if (teams.length > 0) {
 
             const confirmed = window.confirm(
-                "Generating a new league will replace your current teams and statistics. Continue?"
+                "Generating a new league will replace your existing teams and statistics. Continue?"
             );
 
-            if (!confirmed) return;
+            if (!confirmed) {
+                return;
+            }
         }
 
+        const previousTeams = teams;
 
         teams = Array.from(
             { length: numberOfTeams },
             (_, index) => createTeam(index)
         );
 
+        if (!saveLeague()) {
 
-        saveLeague();
+            teams = previousTeams;
+
+            renderLeague();
+
+            updateTeamDropdown();
+
+            return;
+        }
 
         renderLeague();
 
+        updateTeamDropdown();
+
         setStatus(
-            `${numberOfTeams} teams successfully created.`,
+            `${numberOfTeams} teams have been successfully added to your league.`,
             "success"
         );
     }
 
 
     // ==========================================
-    // RENDER LEAGUE TABLE
+    // TABLE CELL HELPERS
+    // ==========================================
+
+    function createTextCell(value, className = "") {
+
+        const cell = document.createElement("td");
+
+        if (className) {
+            cell.className = className;
+        }
+
+        cell.textContent = value;
+
+        return cell;
+    }
+
+
+    function createPositionCell(position, isLeader) {
+
+        const cell = document.createElement("td");
+
+        const badge = document.createElement("span");
+
+        badge.className = "position-badge";
+
+        badge.textContent = position;
+
+        if (isLeader) {
+            badge.classList.add("first-position");
+        }
+
+        cell.appendChild(badge);
+
+        return cell;
+    }
+
+
+    function createTeamCell(team) {
+
+        const cell = document.createElement("td");
+
+        cell.className = "team-column";
+
+        const name = document.createElement("span");
+
+        name.className = "team-name-display";
+
+        name.textContent = team.name;
+
+        cell.appendChild(name);
+
+        return cell;
+    }
+
+
+    // ==========================================
+    // RENDER LEAGUE
     // ==========================================
 
     function renderLeague() {
 
-        elements.leagueTeams.innerHTML = "";
+        const fragment = document.createDocumentFragment();
 
         const sortedTeams = getSortedTeams();
+
+        if (sortedTeams.length === 0) {
+
+            const row = document.createElement("tr");
+
+            const cell = document.createElement("td");
+
+            cell.colSpan = 10;
+
+            cell.className = "empty-state";
+
+            cell.textContent =
+                "No teams available. Generate a league to get started.";
+
+            row.appendChild(cell);
+
+            fragment.appendChild(row);
+
+            elements.leagueTeams.replaceChildren(fragment);
+
+            updateDashboard();
+
+            return;
+        }
 
         sortedTeams.forEach((team, index) => {
 
             const stats = getTeamStats(team);
 
+            const isLeader =
+                index === 0 &&
+                stats !== null &&
+                isValidTeam(team);
+
             const row = document.createElement("tr");
 
-            row.dataset.teamId = team.id;
+            if (isLeader) {
+                row.classList.add("leader-row");
+            }
 
-            if (!stats) {
+            if (!isValidTeam(team)) {
                 row.classList.add("invalid-row");
             }
 
-
-            // Position
-            const positionCell = document.createElement("td");
-
-            const position = document.createElement("span");
-
-            position.className = "position-badge";
-
-            position.textContent = index + 1;
-
-            if (index === 0 && stats) {
-                position.classList.add("first-position");
-            }
-
-            positionCell.appendChild(position);
-
-
-            // Team name
-            const nameCell = document.createElement("td");
-
-            nameCell.className = "team-column";
-
-            const nameInput = document.createElement("input");
-
-            nameInput.type = "text";
-            nameInput.className = "team-name";
-            nameInput.value = team.name;
-            nameInput.maxLength = 40;
-            nameInput.dataset.field = "name";
-            nameInput.setAttribute("aria-label", "Team name");
-
-            nameCell.appendChild(nameInput);
-
-
-            // Editable statistics
-            const editableFields = [
-                "won",
-                "drawn",
-                "lost",
-                "gf",
-                "ga"
-            ];
-
-            const played = document.createElement("td");
-            played.className = "calculated-cell";
-            played.textContent = stats ? stats.played : "—";
-
-
-            function createStatCell(field) {
-
-                const cell = document.createElement("td");
-
-                const input = document.createElement("input");
-
-                input.type = "number";
-                input.min = "0";
-                input.step = "1";
-                input.inputMode = "numeric";
-
-                input.className = "stat-input";
-                input.dataset.field = field;
-
-                input.value = team[field];
-
-                input.setAttribute(
-                    "aria-label",
-                    `${field.toUpperCase()} for ${team.name}`
-                );
-
-                cell.appendChild(input);
-
-                return cell;
-            }
-
-
-            // Derived statistics
-            function createCalculatedCell(value) {
-
-                const cell = document.createElement("td");
-
-                cell.className = "calculated-cell";
-
-                cell.textContent = value ?? "—";
-
-                return cell;
-            }
-
-
-            row.appendChild(positionCell);
-            row.appendChild(nameCell);
-            row.appendChild(played);
-
-            editableFields.forEach(field => {
-                row.appendChild(createStatCell(field));
-            });
+            // Position.
 
             row.appendChild(
-                createCalculatedCell(
-                    stats ? stats.goalDifference : null
+                createPositionCell(
+                    index + 1,
+                    isLeader
                 )
             );
 
+            // Team name.
+
             row.appendChild(
-                createCalculatedCell(
-                    stats ? stats.points : null
+                createTeamCell(team)
+            );
+
+            // Played.
+
+            row.appendChild(
+                createTextCell(
+                    stats ? formatNumber(stats.played) : "—",
+                    "calculated-cell"
                 )
             );
 
-            elements.leagueTeams.appendChild(row);
+            // Won.
+
+            row.appendChild(
+                createTextCell(
+                    stats ? formatNumber(stats.won) : "—",
+                    "calculated-cell"
+                )
+            );
+
+            // Drawn.
+
+            row.appendChild(
+                createTextCell(
+                    stats ? formatNumber(stats.drawn) : "—",
+                    "calculated-cell"
+                )
+            );
+
+            // Lost.
+
+            row.appendChild(
+                createTextCell(
+                    stats ? formatNumber(stats.lost) : "—",
+                    "calculated-cell"
+                )
+            );
+
+            // Goals For.
+
+            row.appendChild(
+                createTextCell(
+                    stats ? formatNumber(stats.gf) : "—",
+                    "calculated-cell"
+                )
+            );
+
+            // Goals Against.
+
+            row.appendChild(
+                createTextCell(
+                    stats ? formatNumber(stats.ga) : "—",
+                    "calculated-cell"
+                )
+            );
+
+            // Goal Difference.
+
+            row.appendChild(
+                createTextCell(
+                    stats ? formatNumber(stats.goalDifference) : "—",
+                    "calculated-cell"
+                )
+            );
+
+            // Points.
+
+            row.appendChild(
+                createTextCell(
+                    stats ? formatNumber(stats.points) : "—",
+                    "calculated-cell"
+                )
+            );
+
+            fragment.appendChild(row);
         });
 
+        elements.leagueTeams.replaceChildren(fragment);
 
         updateDashboard();
     }
 
 
     // ==========================================
-    // UPDATE DASHBOARD SUMMARY
+    // DASHBOARD SUMMARY
     // ==========================================
 
     function updateDashboard() {
@@ -481,132 +940,44 @@ document.addEventListener("DOMContentLoaded", () => {
 
         const sortedTeams = getSortedTeams();
 
-        const leader = sortedTeams.find(team => getTeamStats(team));
+        const leader = sortedTeams.find(team => {
+            return isValidTeam(team);
+        });
 
-        elements.totalTeams.textContent = teams.length;
+        const invalidTeams = teams.filter(team => {
+            return !isValidTeam(team);
+        });
 
-        // Each completed match contributes two team appearances.
+        elements.totalTeams.textContent =
+            formatNumber(teams.length);
+
+        // This is an estimate from team appearances.
+        // It is not a verified match count unless all team
+        // statistics have been recorded consistently.
+
+        const estimatedMatches = totalAppearances / 2;
+
         elements.totalMatches.textContent =
-            Number.isInteger(totalAppearances / 2)
-                ? totalAppearances / 2
-                : (totalAppearances / 2).toFixed(1);
+            Number.isInteger(estimatedMatches)
+                ? formatNumber(estimatedMatches)
+                : estimatedMatches.toFixed(1);
 
-        elements.totalGoals.textContent = totalGoals;
+        elements.totalGoals.textContent =
+            formatNumber(totalGoals);
 
         elements.leagueLeader.textContent =
             leader ? leader.name : "—";
 
-        const invalidTeams = teams.filter(team => {
-
-            return (
-                !getTeamStats(team) ||
-                !isValidTeamName(team, teams)
-            );
-        });
+        elements.standingsCount.textContent =
+            `${teams.length} ${teams.length === 1 ? "TEAM" : "TEAMS"}`;
 
         if (invalidTeams.length > 0) {
 
             setStatus(
-                `${invalidTeams.length} team(s) have invalid or duplicate information. Please review highlighted entries.`,
+                `${invalidTeams.length} team(s) contain invalid or duplicate information. Review the affected entries.`,
                 "error"
             );
-
-        } else {
-
-            setStatus(
-                "All team statistics are valid. League standings are up to date.",
-                "success"
-            );
         }
-    }
-
-
-    // ==========================================
-    // HANDLE TABLE INPUT
-    // ==========================================
-
-    function handleTableInput(event) {
-
-        const input = event.target;
-
-        if (!input.matches("[data-field]")) return;
-
-        const row = input.closest("tr");
-
-        if (!row) return;
-
-        const teamId = row.dataset.teamId;
-
-        const team = teams.find(item => item.id === teamId);
-
-        if (!team) return;
-
-        const field = input.dataset.field;
-
-        if (!["name", "won", "drawn", "lost", "gf", "ga"].includes(field)) {
-            return;
-        }
-
-        team[field] = input.value;
-
-        if (field === "name") {
-
-            const duplicate = !isValidTeamName(team, teams);
-
-            input.classList.toggle("invalid-input", duplicate);
-
-        } else {
-
-            const value = getNumericValue(input.value);
-
-            input.classList.toggle(
-                "invalid-input",
-                value === null
-            );
-        }
-
-
-        // Update calculated cells without rebuilding the table.
-        const stats = getTeamStats(team);
-
-        row.classList.toggle("invalid-row", !stats);
-
-        row.children[2].textContent =
-            stats ? stats.played : "—";
-
-        row.children[8].textContent =
-            stats ? stats.goalDifference : "—";
-
-        row.children[9].textContent =
-            stats ? stats.points : "—";
-
-
-        // Check duplicate team names.
-        const duplicate = !isValidTeamName(team, teams);
-
-        row.querySelector(".team-name").classList.toggle(
-            "invalid-input",
-            duplicate
-        );
-
-
-        updateDashboard();
-
-        saveLeague();
-    }
-
-
-    // ==========================================
-    // SORT WHEN INPUT CHANGES ARE COMMITTED
-    // ==========================================
-
-    function handleTableChange(event) {
-
-        if (!event.target.matches("[data-field]")) return;
-
-        renderLeague();
-
-        saveLeague();
     }
 
 
@@ -618,17 +989,23 @@ document.addEventListener("DOMContentLoaded", () => {
 
         if (teams.length === 0) {
 
-            setStatus("There are no teams to reset.", "error");
+            setStatus(
+                "There are no teams to reset.",
+                "error"
+            );
 
             return;
         }
 
         const confirmed = window.confirm(
-            "Are you sure you want to reset all statistics? Team names will be preserved."
+            "Are you sure you want to reset all team statistics?\n\nTeam names will be preserved, but all wins, draws, losses and goals will return to zero."
         );
 
-        if (!confirmed) return;
+        if (!confirmed) {
+            return;
+        }
 
+        const previousTeams = teams;
 
         teams = teams.map(team => ({
             ...team,
@@ -639,20 +1016,34 @@ document.addEventListener("DOMContentLoaded", () => {
             ga: "0"
         }));
 
+        if (!saveLeague()) {
 
-        saveLeague();
+            teams = previousTeams;
+
+            renderLeague();
+
+            updateTeamDropdown();
+
+            return;
+        }
 
         renderLeague();
 
+        updateTeamDropdown();
+
+        elements.updateAmount.value = "";
+
+        updatePreview();
+
         setStatus(
-            "All statistics have been reset. Team names were preserved.",
+            "All team statistics have been reset successfully. Team names were preserved.",
             "success"
         );
     }
 
 
     // ==========================================
-    // EXPORT LEAGUE TO CSV
+    // CSV EXPORT
     // ==========================================
 
     function exportLeague() {
@@ -667,25 +1058,19 @@ document.addEventListener("DOMContentLoaded", () => {
             return;
         }
 
-
         const invalidTeams = teams.filter(team => {
-
-            return (
-                !getTeamStats(team) ||
-                !isValidTeamName(team, teams)
-            );
+            return !isValidTeam(team);
         });
 
         if (invalidTeams.length > 0) {
 
             setStatus(
-                "Correct invalid team information before exporting.",
+                "Please correct invalid team information before exporting.",
                 "error"
             );
 
             return;
         }
-
 
         const headers = [
             "Position",
@@ -699,7 +1084,6 @@ document.addEventListener("DOMContentLoaded", () => {
             "Goal Difference",
             "Points"
         ];
-
 
         const rows = getSortedTeams().map((team, index) => {
 
@@ -719,12 +1103,14 @@ document.addEventListener("DOMContentLoaded", () => {
             ];
         });
 
-
         const csvContent = [
             headers.map(escapeCSV).join(","),
-            ...rows.map(row => row.map(escapeCSV).join(","))
-        ].join("\r\n");
 
+            ...rows.map(row => {
+                return row.map(escapeCSV).join(",");
+            })
+
+        ].join("\r\n");
 
         const blob = new Blob(
             ["\uFEFF" + csvContent],
@@ -733,13 +1119,11 @@ document.addEventListener("DOMContentLoaded", () => {
             }
         );
 
-
         const url = URL.createObjectURL(blob);
 
         const link = document.createElement("a");
 
         link.href = url;
-
         link.download = "awarri-league-standings.csv";
 
         document.body.appendChild(link);
@@ -748,8 +1132,9 @@ document.addEventListener("DOMContentLoaded", () => {
 
         link.remove();
 
-        URL.revokeObjectURL(url);
-
+        window.setTimeout(() => {
+            URL.revokeObjectURL(url);
+        }, 1000);
 
         setStatus(
             "League standings exported successfully.",
@@ -767,24 +1152,35 @@ document.addEventListener("DOMContentLoaded", () => {
         generateLeague
     );
 
-
-    elements.leagueTeams.addEventListener(
-        "input",
-        handleTableInput
+    elements.updateForm.addEventListener(
+        "submit",
+        applyStatisticsUpdate
     );
 
-
-    elements.leagueTeams.addEventListener(
+    elements.updateTeam.addEventListener(
         "change",
-        handleTableChange
+        updatePreview
     );
 
+    elements.updateField.addEventListener(
+        "change",
+        updatePreview
+    );
+
+    elements.updateAction.addEventListener(
+        "change",
+        updatePreview
+    );
+
+    elements.updateAmount.addEventListener(
+        "input",
+        updatePreview
+    );
 
     elements.resetBtn.addEventListener(
         "click",
         resetStatistics
     );
-
 
     elements.exportBtn.addEventListener(
         "click",
@@ -799,7 +1195,6 @@ document.addEventListener("DOMContentLoaded", () => {
     elements.currentYear.textContent =
         new Date().getFullYear();
 
-
     const hasSavedLeague = loadLeague();
 
     if (hasSavedLeague) {
@@ -807,6 +1202,8 @@ document.addEventListener("DOMContentLoaded", () => {
         elements.numTeams.value = teams.length;
 
         renderLeague();
+
+        updateTeamDropdown();
 
         setStatus(
             "Your saved league has been restored successfully.",
@@ -825,6 +1222,8 @@ document.addEventListener("DOMContentLoaded", () => {
         saveLeague();
 
         renderLeague();
+
+        updateTeamDropdown();
 
         setStatus(
             "Welcome! Your four-team league is ready.",
